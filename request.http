@@ -2,4 +2,19 @@
 GET http://localhost:3001
 
 ###
-GET http://localhost:3001/users
+GET http://localhost:3001/users?sortDesc=true
+
+###
+POST http://localhost:3001/users
+Content-Type: application/json
+
+{
+  "username": "amy",
+  "email": "amy@example.com"
+}
+
+###
+GET http://localhost:3001/users/123
+
+###
+GET http://localhost:3001/users/posts
