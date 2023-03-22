@@ -2,19 +2,23 @@
 GET http://localhost:3001
 
 ###
-GET http://localhost:3001/users?sortDesc=true
+GET http://localhost:3001/users?sortDesc=false
 
 ###
 POST http://localhost:3001/users
+Authorization: abcd
 Content-Type: application/json
 
 {
-  "username": "amy",
-  "email": "amy@example.com"
+  "username": "adam",
+  "email": "adam@example.com"
 }
 
 ###
-GET http://localhost:3001/users/123
+DELETE http://localhost:3001/users/2
+
+###
+GET http://localhost:3001/users/1
 
 ###
 GET http://localhost:3001/users/posts
