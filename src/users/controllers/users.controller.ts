@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
+  NotFoundException,
   Param,
   ParseBoolPipe,
   ParseIntPipe,
@@ -29,7 +32,6 @@ export class UsersController implements IUsersController {
   async getUsers(
     @Query('sortDesc', ParseBoolPipe) sortDesc: boolean,
   ): Promise<User[]> {
-    console.log(sortDesc);
     return this.usersService.findAll(sortDesc);
   }
 
@@ -51,11 +53,30 @@ export class UsersController implements IUsersController {
   ): Promise<Response> {
     try {
       let user = await this.usersService.findUserById(userId);
-      return res.send({ data: user });
+      return user.length && res.send({ data: user });
     } catch (error) {
-      return res
-        .status(HttpStatus.NOT_FOUND)
-        .send({ message: 'User not found' });
+      throw new NotFoundException('User not found!', {
+        cause: new Error(),
+        description: 'User not found in DB',
+      });
+    }
+  }
+
+  @Delete(':userId')
+  @HttpCode(HttpStatus.OK)
+  async deleteUserById(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Res() res: Response,
+  ): Promise<Response> {
+    try {
+      let deletedUser: User[] = await this.usersService.delete(userId);
+
+      return res.send({
+        success: true,
+        message: `#${deletedUser[0].username} User deleted`,
+      });
+    } catch (error) {
+      throw new NotFoundException('User not found!');
     }
   }
 }

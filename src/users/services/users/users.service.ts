@@ -28,4 +28,12 @@ export class UsersService {
       user.length ? resolve(user) : reject([]);
     });
   }
+
+  delete(id: number): Promise<User[]> | Promise<[]> {
+    return new Promise((resolve, reject) => {
+      let deletedUser = this.users.filter((user) => user.id === id);
+      this.users = this.users.filter((user) => user.id !== id);
+      deletedUser.length ? resolve(deletedUser) : reject([]);
+    });
+  }
 }
