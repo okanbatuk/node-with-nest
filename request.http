@@ -11,7 +11,8 @@ Content-Type: application/json
 
 {
   "username": "amy",
-  "email": "amy@example.com"
+  "email": "amy@example.com",
+  "age": 26
 }
 
 ###

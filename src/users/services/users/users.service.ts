@@ -8,11 +8,16 @@ export class UsersService {
 
   create(user: CreateUserDto): Promise<User> {
     return new Promise((resolve, reject) => {
-      const { username, email } = user;
+      const { username, email, age } = user;
       const id: number = this.users.length
         ? this.users[this.users.length - 1].id + 1
         : 1;
-      const newUser: User = { id, username, email };
+      const newUser: User = {
+        id,
+        username,
+        email,
+        age: typeof age === 'string' ? parseInt(age) : age,
+      };
       this.users = [...this.users, newUser];
 
       newUser ? resolve(newUser) : reject(null);
