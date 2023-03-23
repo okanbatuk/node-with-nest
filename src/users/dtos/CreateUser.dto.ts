@@ -1,10 +1,11 @@
-import { IsEmail, IsNotEmpty } from 'class-validator';
+import * as Joi from 'joi';
 
-export class CreateUserDto {
-  @IsNotEmpty()
+export const CreateUserSchema = Joi.object({
+  username: Joi.string().min(3).max(50).required(),
+  email: Joi.string().email().max(50).required(),
+}).options({ abortEarly: false });
+
+export interface CreateUserDto {
   username: string;
-
-  @IsEmail()
-  @IsNotEmpty()
   email: string;
 }

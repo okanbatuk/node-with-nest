@@ -6,13 +6,17 @@ import { User } from 'src/users/interfaces/user.interface';
 export class UsersService {
   private users: User[] = [];
 
-  create(user: CreateUserDto): void {
-    const { username, email } = user;
-    const id: number = this.users.length
-      ? this.users[this.users.length - 1].id + 1
-      : 1;
-    const newUser: User = { id, username, email };
-    this.users = [...this.users, newUser];
+  create(user: CreateUserDto): Promise<User> {
+    return new Promise((resolve, reject) => {
+      const { username, email } = user;
+      const id: number = this.users.length
+        ? this.users[this.users.length - 1].id + 1
+        : 1;
+      const newUser: User = { id, username, email };
+      this.users = [...this.users, newUser];
+
+      newUser ? resolve(newUser) : reject(null);
+    });
   }
 
   findAll(sort: boolean): User[] {

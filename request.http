@@ -10,8 +10,8 @@ Authorization: abcd
 Content-Type: application/json
 
 {
-  "username": "adam",
-  "email": "adam@example.com"
+  "username": "amy",
+  "email": "amy@example.com"
 }
 
 ###
@@ -19,6 +19,9 @@ DELETE http://localhost:3001/users/2
 
 ###
 GET http://localhost:3001/users/1
+
+###
+GET http://localhost:3001/users/aaaa
 
 ###
 GET http://localhost:3001/users/posts

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Delete,
@@ -18,15 +19,18 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { CreateUserDto } from '../dtos/CreateUser.dto';
-import { IUsersController } from '../interfaces/users.controller.interface';
-import { User } from '../interfaces/user.interface';
 import { UsersService } from 'src/users/services/users/users.service';
+import { User } from '../interfaces/user.interface';
+import { IUsersController } from '../interfaces/users.controller.interface';
+import { JoiValidationPipe } from '../validations/joivalidation/joivalidation.pipe';
+import { CreateUserDto, CreateUserSchema } from '../dtos/CreateUser.dto';
 
 @Controller('users')
 export class UsersController implements IUsersController {
+  // Dependency Incection import Users Service
   constructor(private usersService: UsersService) {}
 
+  // GET /users
   @Get()
   @HttpCode(HttpStatus.OK)
   async getUsers(
@@ -35,20 +39,35 @@ export class UsersController implements IUsersController {
     return this.usersService.findAll(sortDesc);
   }
 
+  // POST /users
   @Post()
-  @UsePipes(new ValidationPipe())
-  createUser(
+  @UsePipes(new JoiValidationPipe(CreateUserSchema))
+  async createUser(
     @Body() userPayload: CreateUserDto,
     @Res() res: Response,
-  ): Response {
-    this.usersService.create(userPayload);
-    return res.send('User Created');
+  ): Promise<Response> {
+    try {
+      let newUser = await this.usersService.create(userPayload);
+      return res.json({
+        success: true,
+        message: `${newUser.username} is created..`,
+      });
+    } catch (error) {
+      throw new BadRequestException('User Not Created!!', {
+        cause: new Error(),
+        description: 'User not created!',
+      });
+    }
   }
 
   @Get(':userId')
   @HttpCode(HttpStatus.OK)
   async getUserById(
-    @Param('userId', ParseIntPipe) userId: number,
+    @Param(
+      'userId',
+      new ParseIntPipe({ errorHttpStatusCode: HttpStatus.NOT_ACCEPTABLE }),
+    )
+    userId: number,
     @Res() res: Response,
   ): Promise<Response> {
     try {
@@ -76,7 +95,10 @@ export class UsersController implements IUsersController {
         message: `#${deletedUser[0].username} User deleted`,
       });
     } catch (error) {
-      throw new NotFoundException('User not found!');
+      throw new NotFoundException('User not found!', {
+        cause: new Error(),
+        description: 'User not found in DB',
+      });
     }
   }
 }
