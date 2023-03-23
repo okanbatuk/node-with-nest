@@ -27,7 +27,7 @@ import { CreateUserDto, CreateUserSchema } from '../dtos/CreateUser.dto';
 
 @Controller('users')
 export class UsersController implements IUsersController {
-  // Dependency Incection import Users Service
+  // Dependency Injection => import Users Service
   constructor(private usersService: UsersService) {}
 
   // GET /users
@@ -48,7 +48,7 @@ export class UsersController implements IUsersController {
   ): Promise<Response> {
     try {
       let newUser = await this.usersService.create(userPayload);
-      return res.json({
+      return res.status(HttpStatus.CREATED).json({
         success: true,
         message: `${newUser.username} is created..`,
       });
@@ -60,8 +60,8 @@ export class UsersController implements IUsersController {
     }
   }
 
+  // GET /users/:userId
   @Get(':userId')
-  @HttpCode(HttpStatus.OK)
   async getUserById(
     @Param(
       'userId',
@@ -72,7 +72,7 @@ export class UsersController implements IUsersController {
   ): Promise<Response> {
     try {
       let user = await this.usersService.findUserById(userId);
-      return user.length && res.send({ data: user });
+      return user.length && res.status(HttpStatus.OK).send({ data: user });
     } catch (error) {
       throw new NotFoundException('User not found!', {
         cause: new Error(),
@@ -81,8 +81,8 @@ export class UsersController implements IUsersController {
     }
   }
 
+  // DELETE /users/:userId
   @Delete(':userId')
-  @HttpCode(HttpStatus.OK)
   async deleteUserById(
     @Param('userId', ParseIntPipe) userId: number,
     @Res() res: Response,
@@ -90,7 +90,7 @@ export class UsersController implements IUsersController {
     try {
       let deletedUser: User[] = await this.usersService.delete(userId);
 
-      return res.send({
+      return res.status(HttpStatus.OK).send({
         success: true,
         message: `#${deletedUser[0].username} User deleted`,
       });
