@@ -5,8 +5,8 @@ import {
   Delete,
   Get,
   HttpCode,
-  HttpException,
   HttpStatus,
+  Inject,
   NotFoundException,
   Param,
   ParseBoolPipe,
@@ -28,7 +28,9 @@ import { CreateUserDto, CreateUserSchema } from '../dtos/CreateUser.dto';
 @Controller('users')
 export class UsersController implements IUsersController {
   // Dependency Injection => import Users Service
-  constructor(private usersService: UsersService) {}
+  constructor(
+    @Inject('USER_SERVICE') private readonly usersService: UsersService,
+  ) {}
 
   // GET /users
   @Get()
@@ -71,8 +73,8 @@ export class UsersController implements IUsersController {
     @Res() res: Response,
   ): Promise<Response> {
     try {
-      let user = await this.usersService.findUserById(userId);
-      return user.length && res.status(HttpStatus.OK).send({ data: user });
+      let user: User = await this.usersService.findUserById(userId);
+      return user && res.status(HttpStatus.OK).send({ data: user });
     } catch (error) {
       throw new NotFoundException('User not found!', {
         cause: new Error(),
@@ -88,11 +90,11 @@ export class UsersController implements IUsersController {
     @Res() res: Response,
   ): Promise<Response> {
     try {
-      let deletedUser: User[] = await this.usersService.delete(userId);
+      let deletedUser: User = await this.usersService.delete(userId);
 
       return res.status(HttpStatus.OK).send({
         success: true,
-        message: `#${deletedUser[0].username} User deleted`,
+        message: `#${deletedUser.username} User deleted`,
       });
     } catch (error) {
       throw new NotFoundException('User not found!', {

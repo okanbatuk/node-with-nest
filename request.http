@@ -1,28 +1,29 @@
 ###
-GET http://localhost:3001
+GET http://localhost:3001/api
 
 ###
-GET http://localhost:3001/users?sortDesc=false
+GET http://localhost:3001/api/users?sortDesc=false
 
 ###
-POST http://localhost:3001/users
+POST http://localhost:3001/api/users
 Authorization: abcd
 Content-Type: application/json
 
 {
   "username": "amy",
   "email": "amy@example.com",
-  "age": 26
+  "password": "123123",
+  "age": 25
 }
 
 ###
-DELETE http://localhost:3001/users/2
+DELETE http://localhost:3001/api/users/2
 
 ###
-GET http://localhost:3001/users/1
+GET http://localhost:3001/api/users/1
 
 ###
-GET http://localhost:3001/users/aaaa
+GET http://localhost:3001/api/users/aaaa
 
 ###
-GET http://localhost:3001/users/posts
+GET http://localhost:3001/api/users/posts

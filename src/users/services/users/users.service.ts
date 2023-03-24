@@ -7,15 +7,17 @@ export class UsersService {
   private users: User[] = [];
 
   create(user: CreateUserDto): Promise<User> {
-    return new Promise((resolve, reject) => {
-      const { username, email, age } = user;
+    return new Promise(async (resolve, reject) => {
+      const { username, email, age, password } = user;
       const id: number = this.users.length
         ? this.users[this.users.length - 1].id + 1
         : 1;
+
       const newUser: User = {
         id,
         username,
         email,
+        password,
         age: typeof age === 'string' ? parseInt(age) : age,
       };
       this.users = [...this.users, newUser];
@@ -30,19 +32,19 @@ export class UsersService {
       : this.users.sort((a, b) => a.id - b.id);
   }
 
-  findUserById(id: number): Promise<User[]> | Promise<[]> {
+  findUserById(id: number): Promise<User> {
     return new Promise((resolve, reject) => {
-      let user: User[] = this.users.filter((user) => user.id === id);
+      let user: User = this.users.find((user) => user.id === id);
 
-      user.length ? resolve(user) : reject([]);
+      user ? resolve(user) : reject(null);
     });
   }
 
-  delete(id: number): Promise<User[]> | Promise<[]> {
+  delete(id: number): Promise<User> {
     return new Promise((resolve, reject) => {
-      let deletedUser = this.users.filter((user) => user.id === id);
+      let deletedUser: User = this.users.find((user) => user.id === id);
       this.users = this.users.filter((user) => user.id !== id);
-      deletedUser.length ? resolve(deletedUser) : reject([]);
+      deletedUser ? resolve(deletedUser) : reject([]);
     });
   }
 }

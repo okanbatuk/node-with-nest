@@ -10,7 +10,12 @@ import { ExampleMiddleware } from './middlewares/example/example.middleware';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [
+    {
+      provide: 'USER_SERVICE',
+      useClass: UsersService,
+    },
+  ],
 })
 export class UsersModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
