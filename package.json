@@ -23,6 +23,7 @@
     "@nestjs/common": "^9.3.12",
     "@nestjs/core": "^9.3.12",
     "@nestjs/platform-express": "^9.3.12",
+    "class-transformer": "^0.5.1",
     "joi": "^17.9.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0"
