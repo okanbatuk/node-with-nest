@@ -19,9 +19,12 @@ import { ExampleMiddleware } from './middlewares/example/example.middleware';
 })
 export class UsersModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ExampleMiddleware).forRoutes({
-      path: 'users',
-      method: RequestMethod.POST,
-    });
+    consumer.apply(ExampleMiddleware).forRoutes(
+      {
+        path: 'users',
+        method: RequestMethod.POST,
+      },
+      { path: 'users/:userId', method: RequestMethod.POST },
+    );
   }
 }

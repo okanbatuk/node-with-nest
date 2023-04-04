@@ -1,6 +1,10 @@
 ###
 GET http://localhost:3001/api
 
+
+###
+GET http://localhost:3001/api/users/test
+
 ###
 GET http://localhost:3001/api/users?sortDesc=false
 
@@ -10,17 +14,28 @@ Authorization: abcd
 Content-Type: application/json
 
 {
-  "username": "amy",
-  "email": "amy@example.com",
+  "username": "jane",
+  "email": "jane@example.com",
   "password": "123123",
-  "age": 25
+  "age": 26
 }
 
 ###
-DELETE http://localhost:3001/api/users/2
+DELETE http://localhost:3001/api/users/3
 
 ###
 GET http://localhost:3001/api/users/1
+
+###
+POST http://localhost:3001/api/users/1
+Authorization: abcd
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "123123",
+  "age": 15
+}
 
 ###
 GET http://localhost:3001/api/users/aaaa
